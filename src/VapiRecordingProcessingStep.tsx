@@ -1,9 +1,8 @@
-/* eslint-disable react/no-unescaped-entities */
 import { useEffect, useState } from 'react';
 import { Box, CircularProgress, Typography } from '@mui/material';
 
 export const VapiRecordingProcessingStep = () => {
-  const [data, setData] = useState<any>(null);
+  const [message, setMessage] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -13,7 +12,7 @@ export const VapiRecordingProcessingStep = () => {
       try {
         const parsed = JSON.parse(event.data);
         console.log('📡 Отримано подію:', parsed);
-        setData(parsed);
+        setMessage(parsed.message);
       } catch (err) {
         console.error('❌ Помилка при розборі події:', err);
         setError('Error parsing event data');
@@ -47,29 +46,28 @@ export const VapiRecordingProcessingStep = () => {
         Processing Call Data
       </Typography>
 
-      {!data && (
+      {!message && (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4 }}>
           <CircularProgress />
           <Typography sx={{ ml: 2 }}>Waiting for data...</Typography>
         </Box>
       )}
 
-      {data && (
+      {message && (
         <Box sx={{ mt: 4, textAlign: 'left' }}>
-          <Typography variant="h6" gutterBottom>
-            🔔 Received Data:
-          </Typography>
-          <Box
-            sx={{
-              bgcolor: '#f5f5f5',
-              p: 2,
-              borderRadius: 1,
-              maxHeight: '400px',
-              overflow: 'auto',
-            }}
-          >
-            <pre style={{ margin: 0 }}>{JSON.stringify(data, null, 2)}</pre>
-          </Box>
+          <Typography variant="h6">📞 Call ID:</Typography>
+          <Typography sx={{ mb: 2 }}>{message.call?.id ?? '—'}</Typography>
+
+          {message.recordingUrl ? (
+            <>
+              <Typography variant="h6">🎧 Audio:</Typography>
+              <audio controls src={message.recordingUrl} style={{ width: '100%' }} />
+            </>
+          ) : (
+            <Typography variant="body2" color="text.secondary">
+              No audio available.
+            </Typography>
+          )}
         </Box>
       )}
     </Box>
