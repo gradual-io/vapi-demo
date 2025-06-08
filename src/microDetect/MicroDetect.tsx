@@ -2,7 +2,7 @@
 /* eslint-disable consistent-return */
 import { useEffect, useState } from 'react';
 
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import { DeviceSelect } from './DeviceSelect';
 
